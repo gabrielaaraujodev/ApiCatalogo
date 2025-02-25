@@ -17,11 +17,11 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Category>> Get()
+    public async Task<ActionResult<IEnumerable<Category>>> GetAsync()
     {
         try
         {
-            return _context.Categories.AsNoTracking().ToList();
+            return await _context.Categories.AsNoTracking().ToListAsync();
         }
         catch (Exception)
         {
@@ -32,11 +32,11 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet("{id:int}", Name ="ObterCategoria")]
-    public ActionResult<Category> Get(int id)
+    public async Task<ActionResult<Category>> GetAsync(int id)
     {
         try
         {
-            var category = _context.Categories.FirstOrDefault(p => p.CategoryId == id);
+            var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(p => p.CategoryId == id);
 
             if (category == null)
                 return NotFound("Houve um problema com o id da categoria.");
@@ -52,11 +52,11 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet("products")]
-    public ActionResult<IEnumerable<Category>> GetCategoriesProducts()
+    public async Task<ActionResult<IEnumerable<Category>>> GetCategoriesProductsAsync()
     {
         try
         {
-            return _context.Categories.Include(p => p.Products).ToList();
+            return await _context.Categories.AsNoTracking().Include(p => p.Products).ToListAsync();
         }
         catch (Exception)
         {

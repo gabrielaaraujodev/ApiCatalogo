@@ -18,11 +18,11 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Product>> Get()
+    public async Task<ActionResult<IEnumerable<Product>>> GetAsync()
     {
         try
         {
-            var products = _context.Products.ToList();
+            var products = await _context.Products.AsNoTracking().ToListAsync();
 
             if (products is null)
                 return NotFound("Lista de produtos inexistente.");
@@ -38,11 +38,11 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id:int}", Name="ObterProduto")]
-    public ActionResult<Product> Get(int id)
+    public async Task<ActionResult<Product>> GetAsync(int id)
     {
         try
         {
-            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+            var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == id);
 
             if (product is null)
                 return NotFound($"Produto com o id = {id} inexistente.");
