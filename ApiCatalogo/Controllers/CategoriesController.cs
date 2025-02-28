@@ -33,9 +33,12 @@ public class CategoriesController : ControllerBase
 
     [HttpGet("{id:int}", Name ="ObterCategoria")]
     public async Task<ActionResult<Category>> GetAsync(int id)
-    {
+    {    
+        // throw new Exception("Exceção ao retornar a categoria pelo ID");
+        
         try
         {
+
             var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(p => p.CategoryId == id);
 
             if (category == null)
