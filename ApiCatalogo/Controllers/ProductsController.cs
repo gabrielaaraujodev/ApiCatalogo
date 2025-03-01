@@ -11,114 +11,87 @@ namespace ApiCatalogo.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly ILogger<ProductsController> _logger;
 
-    public ProductsController(AppDbContext context)
+    public ProductsController(AppDbContext context, ILogger<ProductsController> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> GetAsync()
     {
-        try
+        var products = await _context.Products.AsNoTracking().ToListAsync();
+
+        if (products is null)
         {
-            var products = await _context.Products.AsNoTracking().ToListAsync();
-
-            if (products is null)
-                return NotFound("Lista de produtos inexistente.");
-
-            return products;
+            _logger.LogWarning("Lista de produtos inexistentes.");
+            return NotFound("Lista de produtos inexistente.");
         }
-        catch (Exception)
-        {
 
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Houve um problema ao resgatar a lista de produtos.");
-        }
+        return products;
     }
 
     [HttpGet("{id:int}", Name="ObterProduto")]
     public async Task<ActionResult<Product>> GetAsync(int id)
     {
-        try
+
+        var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == id);
+
+        if (product is null)
         {
-            var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == id);
-
-            if (product is null)
-                return NotFound($"Produto com o id = {id} inexistente.");
-
-            return product;
+            _logger.LogWarning($"Produto com o id = {id} inexistente.");
+            return NotFound($"Produto com o id = {id} inexistente.");
         }
-        catch (Exception)
-        {
 
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Houve um problema ao resgatar o produto.");
-        }
+        return product;
     }
 
     [HttpPost]
     public ActionResult Post(Product product)
     {
-        try
+        if (product is null)
         {
-            if (product is null)
-                return BadRequest("Houve um problema em adicionar o novo produto.");
-
-            _context.Products.Add(product);
-            _context.SaveChanges();
-
-            return new CreatedAtRouteResult("ObterProduto", new { id = product.ProductId, product });
+            _logger.LogWarning($"Houve um problema em adicionar o novo produto de nome {product?.Name}.");
+            return BadRequest($"Houve um problema em adicionar o novo produto de nome {product?.Name}.");
         }
-        catch (Exception)
-        {
 
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Houve um problema em adicionar o produto.");
-        }        
+        _context.Products.Add(product);
+        _context.SaveChanges();
+
+        return new CreatedAtRouteResult("ObterProduto", new { id = product.ProductId, product });       
     }
 
     [HttpPut("{id:int}")]
     public ActionResult Put(int id, Product product)
-    {
-        try
+    { 
+        if (id != product.ProductId)
         {
-            if (id != product.ProductId)
-                return BadRequest("Houve um problema em alterar o produto.");
-
-            _context.Entry(product).State = EntityState.Modified;
-            _context.SaveChanges();
-
-            return Ok(product);
+            _logger.LogWarning($"Houve um problema em alterar o produto de id = {id}");
+            return BadRequest($"Houve um problema em alterar o produto de id = {id}");
         }
-        catch (Exception)
-        {
 
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Houve um problema em alterar o produto.");
-        }   
+        _context.Entry(product).State = EntityState.Modified;
+        _context.SaveChanges();
+
+        return Ok(product);
     }
 
     [HttpDelete("{id:int}")]
     public ActionResult Delete(int id)
     {
-        try
+        var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+
+        if (product is null)
         {
-            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
-
-            if (product is null)
-                return NotFound("Houve um problema em deleter o produto.");
-
-            _context.Products.Remove(product);
-            _context.SaveChanges();
-
-            return Ok(product);
+            _logger.LogWarning($"Houve um problema em deletar o produto de id = {id}");
+            return NotFound($"Houve um problema em deletar o produto de id = {id}");
         }
-        catch (Exception)
-        {
 
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                $"Houve um problema em remover o produto de id = {id}.");
-        }
+        _context.Products.Remove(product);
+        _context.SaveChanges();
+
+        return Ok(product);
     }
 }
