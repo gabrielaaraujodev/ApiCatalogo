@@ -2,6 +2,7 @@ using ApiCatalogo.Context;
 using ApiCatalogo.Extensions;
 using ApiCatalogo.Filter;
 using ApiCatalogo.Logging;
+using ApiCatalogo.Repositories;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -33,6 +34,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 );
 
 builder.Services.AddScoped<ApiLoggingFilter>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration
 {

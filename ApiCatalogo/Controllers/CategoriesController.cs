@@ -1,6 +1,7 @@
 ﻿using ApiCatalogo.Context;
 using ApiCatalogo.Filter;
 using ApiCatalogo.Models;
+using ApiCatalogo.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,27 +11,29 @@ namespace ApiCatalogo.Controllers;
 [ApiController]
 public class CategoriesController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly ICategoryRepository _repository;
     private readonly ILogger<CategoriesController> _logger;
 
-    public CategoriesController(AppDbContext context, ILogger<CategoriesController> logger)
+    public CategoriesController(ICategoryRepository repository, ILogger<CategoriesController> logger)
     {
-        _context = context;
+        _repository = repository;
         _logger = logger;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Category>>> GetAsync()
+    public ActionResult<IEnumerable<Category>> Get()
     {
-            return await _context.Categories.AsNoTracking().ToListAsync();
+        var category = _repository.GetCategories();
+
+        return Ok(category);
     }
 
     [HttpGet("{id:int}", Name ="ObterCategoria")]
-    public async Task<ActionResult<Category>> GetAsync(int id)
+    public ActionResult<Category> Get(int id)
     {    
-        var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(p => p.CategoryId == id);
+        var category = _repository.GetCategory(id);
 
-        if (category == null)
+        if (category is null)
         {
             _logger.LogWarning($"Categoria com id = {id} não encontrada.");
             return NotFound($"Categoria com id = {id} não encontrada.");
@@ -39,28 +42,24 @@ public class CategoriesController : ControllerBase
         return Ok(category);
     }
 
-    [HttpGet("products")]
+    /*[HttpGet("products")]
     public async Task<ActionResult<IEnumerable<Category>>> GetCategoriesProductsAsync()
     {
-
         return await _context.Categories.AsNoTracking().Include(p => p.Products).ToListAsync();
-    }
+    }*/
 
     [HttpPost]
     public ActionResult Post(Category category)
-    {
- 
+    { 
         if (category is null)
         {
             _logger.LogWarning("$Dados Inválidos.");
             return BadRequest("$Dados Inválidos.");
         }
 
-        _context.Categories.Add(category);
-        _context.SaveChanges();
+        var createdCategory = _repository.Create(category);
 
-        return new CreatedAtRouteResult("ObterCategoria", new { id = category.CategoryId }, category);
-    
+        return new CreatedAtRouteResult("ObterCategoria", new { id = createdCategory.CategoryId }, createdCategory);
     }
 
     [HttpPut("{id:int}")]
@@ -72,8 +71,7 @@ public class CategoriesController : ControllerBase
             return BadRequest("Dados Inválidos.");
         }
 
-        _context.Entry(category).State = EntityState.Modified;
-        _context.SaveChanges();
+        _repository.Update(category);
 
         return Ok(category); 
     }
@@ -81,17 +79,16 @@ public class CategoriesController : ControllerBase
     [HttpDelete("{id:int}")]
     public ActionResult Delete(int id)
     {
-        var category = _context.Categories.FirstOrDefault(p => p.CategoryId == id);
+        var category = _repository.GetCategory(id);
 
-        if (category == null)
+        if (category is null)
         {
             _logger.LogWarning($"Categoria de id = {id} não encontrada.");
             return NotFound($"Categoria de id = {id} não encontrada.");
         }
 
-        _context.Categories.Remove(category);
-        _context.SaveChanges();
+        var deletedCategory = _repository.Delete(id);
 
-        return Ok(category);      
+        return Ok(deletedCategory);      
     }
 }
