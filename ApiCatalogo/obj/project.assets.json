@@ -2536,23 +2536,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Gabriel\\.nuget\\packages\\": {},
+    "C:\\Users\\Gabriel Araujo (Dev)\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Gabriel\\Desktop\\ASP .NET\\ApiCatalogo\\ApiCatalogo\\ApiCatalogo.csproj",
+      "projectUniqueName": "C:\\Users\\Gabriel Araujo (Dev)\\Source\\Repos\\ApiCatalogo\\ApiCatalogo\\ApiCatalogo.csproj",
       "projectName": "ApiCatalogo",
-      "projectPath": "C:\\Users\\Gabriel\\Desktop\\ASP .NET\\ApiCatalogo\\ApiCatalogo\\ApiCatalogo.csproj",
-      "packagesPath": "C:\\Users\\Gabriel\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Gabriel\\Desktop\\ASP .NET\\ApiCatalogo\\ApiCatalogo\\obj\\",
+      "projectPath": "C:\\Users\\Gabriel Araujo (Dev)\\Source\\Repos\\ApiCatalogo\\ApiCatalogo\\ApiCatalogo.csproj",
+      "packagesPath": "C:\\Users\\Gabriel Araujo (Dev)\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Gabriel Araujo (Dev)\\Source\\Repos\\ApiCatalogo\\ApiCatalogo\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Gabriel\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Gabriel Araujo (Dev)\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -2561,7 +2561,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2579,7 +2578,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net8.0": {
@@ -2619,7 +2619,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.405/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
