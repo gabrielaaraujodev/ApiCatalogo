@@ -15,27 +15,28 @@ public class ProductsController : ControllerBase
         Esta implementação é referente ao código específico da interface
         de produto que foi criada.
     */
-    private readonly IProductRepository _productRepository;
-    
+    //private readonly IProductRepository _productRepository;
+
     /*
         Esta implementação é referente ao código genérico da interface
         de repository que foi criada.
     */
-    private readonly IRepository<Product> _repository;
+    //private readonly IRepository<Product> _repository;
+
+    private IUnitOfWork _uof;
 
     private readonly ILogger<ProductsController> _logger;
 
-    public ProductsController(IRepository<Product> repository, IProductRepository productRepository, ILogger<ProductsController> logger)
+    public ProductsController(ILogger<ProductsController> logger, IUnitOfWork uof)
     {
-        _productRepository = productRepository;
-        _repository = repository;
         _logger = logger;
+        _uof = uof;
     }
 
     [HttpGet]
     public ActionResult<IEnumerable<Product>> Get()
     {
-        var products = _repository.GetAll();
+        var products = _uof.ProductRepository.GetAll();
 
         if (products is null)
         {
@@ -50,7 +51,7 @@ public class ProductsController : ControllerBase
     public ActionResult<Product> Get(int id)
     {
 
-        var product = _repository.Get(c => c.ProductId == id);
+        var product = _uof.ProductRepository.Get(c => c.ProductId == id);
 
         if (product is null)
         {
@@ -64,7 +65,7 @@ public class ProductsController : ControllerBase
     [HttpGet("produtos/{id}")]
     public ActionResult<IEnumerable<Product>> GetProductsCategory(int id)
     {
-        var products = _productRepository.GetProdructsByCategory(id);
+        var products = _uof.ProductRepository.GetProdructsByCategory(id);
 
         if (products is null)
             return NotFound();
@@ -81,7 +82,8 @@ public class ProductsController : ControllerBase
             return BadRequest($"Houve um problema em adicionar o novo produto de nome {product?.Name}.");
         }
 
-        var newProduct = _repository.Create(product);
+        var newProduct = _uof.ProductRepository.Create(product);
+        _uof.Commit();
 
         return new CreatedAtRouteResult("ObterProduto", new { id = newProduct.ProductId, newProduct });       
     }
@@ -95,7 +97,8 @@ public class ProductsController : ControllerBase
             return BadRequest($"Houve um problema em alterar o produto de id = {id}");
         }
 
-        var productAtt = _repository.Update(product);
+        var productAtt = _uof.ProductRepository.Update(product);
+        _uof.Commit();
 
         return Ok(productAtt);
     }
@@ -103,12 +106,13 @@ public class ProductsController : ControllerBase
     [HttpDelete("{id:int}")]
     public ActionResult Delete(int id)
     {
-        var product = _repository.Get(c => c.ProductId == id);
+        var product = _uof.ProductRepository.Get(c => c.ProductId == id);
 
         if (product is null)
             return NotFound("Produto não encontrado ...");
 
-        var deletedProduct = _repository.Delete(product);
+        var deletedProduct = _uof.ProductRepository.Delete(product);
+        _uof.Commit();
 
         return Ok(deletedProduct);
     }
