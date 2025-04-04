@@ -1,4 +1,5 @@
 ﻿using ApiCatalogo.Context;
+using ApiCatalogo.DTOs;
 using ApiCatalogo.Models;
 using ApiCatalogo.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -34,7 +35,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Product>> Get()
+    public ActionResult<IEnumerable<ProductDTO>> Get()
     {
         var products = _uof.ProductRepository.GetAll();
 
@@ -48,7 +49,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id:int}", Name="ObterProduto")]
-    public ActionResult<Product> Get(int id)
+    public ActionResult<ProductDTO> Get(int id)
     {
 
         var product = _uof.ProductRepository.Get(c => c.ProductId == id);
@@ -63,7 +64,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("produtos/{id}")]
-    public ActionResult<IEnumerable<Product>> GetProductsCategory(int id)
+    public ActionResult<IEnumerable<ProductDTO>> GetProductsCategory(int id)
     {
         var products = _uof.ProductRepository.GetProdructsByCategory(id);
 
@@ -74,9 +75,9 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post(Product product)
+    public ActionResult<ProductDTO> Post(ProductDTO productDTO)
     {
-        if (product is null)
+        if (productDTO is null)
         {
             _logger.LogWarning($"Houve um problema em adicionar o novo produto de nome {product?.Name}.");
             return BadRequest($"Houve um problema em adicionar o novo produto de nome {product?.Name}.");
@@ -89,9 +90,9 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult Put(int id, Product product)
+    public ActionResult<ProductDTO> Put(int id, ProductDTO productDTO)
     { 
-        if (id != product.ProductId)
+        if (id != productDTO.ProductId)
         {
             _logger.LogWarning($"Houve um problema em alterar o produto de id = {id}");
             return BadRequest($"Houve um problema em alterar o produto de id = {id}");
@@ -104,7 +105,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id)
+    public ActionResult<ProductDTO> Delete(int id)
     {
         var product = _uof.ProductRepository.Get(c => c.ProductId == id);
 

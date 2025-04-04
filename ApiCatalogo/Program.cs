@@ -1,4 +1,5 @@
 using ApiCatalogo.Context;
+using ApiCatalogo.DTOs.AutomaticMapper;
 using ApiCatalogo.Extensions;
 using ApiCatalogo.Filter;
 using ApiCatalogo.Logging;
@@ -43,6 +44,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     Para resolver isso, será feito a "adaptação" abaixo.
 */
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+builder.Services.AddAutoMapper(typeof(ProductDtoMappingProfile));
 
 builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration
 {

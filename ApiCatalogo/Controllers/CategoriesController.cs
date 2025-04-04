@@ -1,4 +1,6 @@
-﻿using ApiCatalogo.Models;
+﻿using ApiCatalogo.DTOs;
+using ApiCatalogo.DTOs.ManualMapping;
+using ApiCatalogo.Models;
 using ApiCatalogo.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,15 +19,20 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Category>> Get()
+    public ActionResult<IEnumerable<CategoryDTO>> Get()
     {
-        var category = _uof.CategoryRepository.GetAll();
+        var categories = _uof.CategoryRepository.GetAll();
 
-        return Ok(category);
+        if (categories is null) 
+            return NotFound("Não existem categorias ...");
+
+        var categoriesDTO = categories.ToCategoryDtoList();
+
+        return Ok(categoriesDTO);
     }
 
     [HttpGet("{id:int}", Name ="ObterCategoria")]
-    public ActionResult<Category> Get(int id)
+    public ActionResult<CategoryDTO> Get(int id)
     {    
         var category = _uof.CategoryRepository.Get(c => c.CategoryId == id);
 
@@ -34,6 +41,8 @@ public class CategoriesController : ControllerBase
             _logger.LogWarning($"Categoria com id = {id} não encontrada.");
             return NotFound($"Categoria com id = {id} não encontrada.");
         }
+
+        var categoryDTO = category.ToCategoryDTO();
 
         return Ok(category);
     }
@@ -45,37 +54,45 @@ public class CategoriesController : ControllerBase
     }*/
 
     [HttpPost]
-    public ActionResult Post(Category category)
+    public ActionResult<CategoryDTO> Post(CategoryDTO categoryDTO)
     { 
-        if (category is null)
+        if (categoryDTO is null)
         {
             _logger.LogWarning("$Dados Inválidos.");
             return BadRequest("$Dados Inválidos.");
         }
 
-        var createdCategory = _uof.CategoryRepository.Create(category);
+        var categoryDtoToNormal = categoryDTO.ToCategory();
+
+        var createdCategory = _uof.CategoryRepository.Create(categoryDtoToNormal);
         _uof.Commit();
 
-        return new CreatedAtRouteResult("ObterCategoria", new { id = createdCategory.CategoryId }, createdCategory);
+        var categoryMapperDTO = createdCategory.ToCategoryDTO();
+        
+        return new CreatedAtRouteResult("ObterCategoria", new { id = categoryMapperDTO.CategoryId }, categoryMapperDTO);
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult Put(int id, Category category)
+    public ActionResult<CategoryDTO> Put(int id, CategoryDTO categoryDTO)
     {
-        if (id != category.CategoryId)
+        if (id != categoryDTO.CategoryId)
         {
             _logger.LogWarning("Dados Inválidos.");
             return BadRequest("Dados Inválidos.");
         }
 
-        _uof.CategoryRepository.Update(category);
+        var categoryDtoToNormal = categoryDTO.ToCategory();
+
+        var UpdatedCategory = _uof.CategoryRepository.Update(categoryDtoToNormal);
         _uof.Commit();
 
-        return Ok(category); 
+        var categoryMapperDTO = UpdatedCategory.ToCategoryDTO();
+
+        return Ok(categoryMapperDTO); 
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id)
+    public ActionResult<CategoryDTO> Delete(int id)
     {
         var category = _uof.CategoryRepository.Get(c => c.CategoryId == id);
 
@@ -88,6 +105,8 @@ public class CategoriesController : ControllerBase
         var deletedCategory = _uof.CategoryRepository.Delete(category);
         _uof.Commit();
 
-        return Ok(deletedCategory);      
+        var categoryMapperDTO = deletedCategory.ToCategoryDTO();
+
+        return Ok(categoryMapperDTO);      
     }
 }
