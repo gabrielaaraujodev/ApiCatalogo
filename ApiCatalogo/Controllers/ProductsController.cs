@@ -2,6 +2,7 @@
 using ApiCatalogo.DTOs;
 using ApiCatalogo.Models;
 using ApiCatalogo.Repositories;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,13 +26,14 @@ public class ProductsController : ControllerBase
     //private readonly IRepository<Product> _repository;
 
     private IUnitOfWork _uof;
-
+    private readonly IMapper _mapper;
     private readonly ILogger<ProductsController> _logger;
 
-    public ProductsController(ILogger<ProductsController> logger, IUnitOfWork uof)
+    public ProductsController(ILogger<ProductsController> logger, IUnitOfWork uof, IMapper mapper)
     {
         _logger = logger;
         _uof = uof;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -44,6 +46,9 @@ public class ProductsController : ControllerBase
             _logger.LogWarning("Lista de produtos inexistentes.");
             return NotFound("Lista de produtos inexistente.");
         }
+
+        var productsDTO = _mapper.Map<IEnumerable<ProductDTO>>(products);
+
 
         return Ok(products);
     }
@@ -60,7 +65,9 @@ public class ProductsController : ControllerBase
             return NotFound($"Produto com o id = {id} inexistente.");
         }
 
-        return Ok(product);
+        var productDTO = _mapper.Map<ProductDTO>(product);
+
+        return Ok(productDTO);
     }
 
     [HttpGet("produtos/{id}")]
@@ -71,7 +78,9 @@ public class ProductsController : ControllerBase
         if (products is null)
             return NotFound();
 
-        return Ok(products);
+        var productsDTO = _mapper.Map<IEnumerable<ProductDTO>>(products);
+
+        return Ok(productsDTO);
     }
 
     [HttpPost]
@@ -79,14 +88,18 @@ public class ProductsController : ControllerBase
     {
         if (productDTO is null)
         {
-            _logger.LogWarning($"Houve um problema em adicionar o novo produto de nome {product?.Name}.");
-            return BadRequest($"Houve um problema em adicionar o novo produto de nome {product?.Name}.");
+            _logger.LogWarning($"Houve um problema em adicionar o novo produto de nome {productDTO?.Name}.");
+            return BadRequest($"Houve um problema em adicionar o novo produto de nome {productDTO?.Name}.");
         }
 
-        var newProduct = _uof.ProductRepository.Create(product);
+        var productNormal = _mapper.Map<Product>(productDTO);
+
+        var newProduct = _uof.ProductRepository.Create(productNormal);
         _uof.Commit();
 
-        return new CreatedAtRouteResult("ObterProduto", new { id = newProduct.ProductId, newProduct });       
+        var newProductDTO = _mapper.Map<ProductDTO>(newProduct);
+
+        return new CreatedAtRouteResult("ObterProduto", new { id = newProductDTO.ProductId, newProductDTO });       
     }
 
     [HttpPut("{id:int}")]
@@ -98,10 +111,14 @@ public class ProductsController : ControllerBase
             return BadRequest($"Houve um problema em alterar o produto de id = {id}");
         }
 
-        var productAtt = _uof.ProductRepository.Update(product);
+        var productNormal = _mapper.Map<Product>(productDTO);
+
+        var productAtt = _uof.ProductRepository.Update(productNormal);
         _uof.Commit();
 
-        return Ok(productAtt);
+        var newProductDTO = _mapper.Map<ProductDTO>(productAtt);
+
+        return Ok(newProductDTO);
     }
 
     [HttpDelete("{id:int}")]
@@ -114,6 +131,8 @@ public class ProductsController : ControllerBase
 
         var deletedProduct = _uof.ProductRepository.Delete(product);
         _uof.Commit();
+
+        var productDTO = _mapper.Map<ProductDTO>(deletedProduct);
 
         return Ok(deletedProduct);
     }
