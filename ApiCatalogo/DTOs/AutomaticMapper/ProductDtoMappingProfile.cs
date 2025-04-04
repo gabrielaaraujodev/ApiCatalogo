@@ -9,6 +9,8 @@ namespace ApiCatalogo.DTOs.AutomaticMapper
         {
             CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<Product,ProductDtoUpdateRequest>().ReverseMap();
+            CreateMap<Product,ProductDtoUpdateResponse>().ReverseMap();
         }
     }
 }
