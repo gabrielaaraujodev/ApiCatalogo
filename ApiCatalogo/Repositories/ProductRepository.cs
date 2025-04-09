@@ -23,12 +23,36 @@ namespace ApiCatalogo.Repositories
         //        .Take(productsParams.PageSize).ToList();
         //}
 
-        public PagedList<Product> GetCategories(ProductsParameters productsParams)
+        public PagedList<Product> GetProducts(ProductsParameters productsParams)
         {
             var products = GetAll().OrderBy(P => P.ProductId).AsQueryable();
             var orderProducts = PagedList<Product>.ToPagedList(products, productsParams.PageNumber, productsParams.PageSize);
 
             return orderProducts;
+        }
+
+        public PagedList<Product> GetProductsFilterPrice(ProductsFilterPrice productsFilterPrice)
+        {
+            var products = GetAll().AsQueryable();
+
+            if (productsFilterPrice.Price.HasValue && !string.IsNullOrEmpty(productsFilterPrice.PriceStandart))
+            {
+                if (productsFilterPrice.PriceStandart.Equals("maior", StringComparison.OrdinalIgnoreCase))
+                {
+                    products = products.Where(p => p.Price > productsFilterPrice.Price.Value).OrderBy(p => p.Price);
+                } else if (productsFilterPrice.PriceStandart.Equals("menor", StringComparison.OrdinalIgnoreCase))
+                {
+                    products = products.Where(p => p.Price < productsFilterPrice.Price.Value).OrderBy(p => p.Price);
+                } else if (productsFilterPrice.PriceStandart.Equals("igual", StringComparison.OrdinalIgnoreCase))
+                {
+                    products = products.Where(p => p.Price == productsFilterPrice.Price.Value).OrderBy(p => p.Price);
+
+                }
+            }
+
+            var filterProducts = PagedList<Product>.ToPagedList(products, productsFilterPrice.PageNumber, productsFilterPrice.PageSize);
+
+            return filterProducts;
         }
     }
 }

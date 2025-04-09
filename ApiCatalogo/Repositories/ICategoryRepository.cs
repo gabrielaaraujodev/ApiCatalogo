@@ -7,5 +7,6 @@ namespace ApiCatalogo.Repositories;
 public interface ICategoryRepository : IRepository<Category>
 {
     PagedList<Category> GetCategories(CategoriesParameters categoriesParams);
+    PagedList<Category> GetCategoriesFilterName(CategoriesFilterName categoriesParams);
 
 }

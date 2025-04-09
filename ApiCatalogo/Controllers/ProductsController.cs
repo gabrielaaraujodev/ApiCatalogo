@@ -39,7 +39,29 @@ public class ProductsController : ControllerBase
     [HttpGet("pagination")]
     public ActionResult<IEnumerable<ProductDTO>> Get([FromQuery] ProductsParameters productsParameters)
     {
-        var products = _uof.ProductRepository.GetCategories(productsParameters);
+        var products = _uof.ProductRepository.GetProducts(productsParameters);
+
+        var metadata = new
+        {
+            products.TotalCount,
+            products.PageSize,
+            products.CurrentPage,
+            products.TotalPages,
+            products.HasNext,
+            products.HasPrevious
+        };
+
+        Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+        var productsDTO = _mapper.Map<IEnumerable<ProductDTO>>(products);
+
+        return Ok(productsDTO);
+    }
+
+    [HttpGet("filter/price/pagination")]
+    public ActionResult<IEnumerable<ProductDTO>> GetProductsFilterPrice([FromQuery] ProductsFilterPrice productsFilterParameters)
+    {
+        var products = _uof.ProductRepository.GetProductsFilterPrice(productsFilterParameters);
 
         var metadata = new
         {

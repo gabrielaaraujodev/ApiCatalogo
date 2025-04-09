@@ -42,6 +42,27 @@ public class CategoriesController : ControllerBase
         return Ok(categoriesDTO);
     }
 
+    public ActionResult<IEnumerable<CategoryDTO>> GetCategoriesFilterName([FromQuery] CategoriesFilterName categoriesFilterParameters)
+    {
+        var categories = _uof.CategoryRepository.GetCategoriesFilterName(categoriesFilterParameters);
+
+        var metadata = new
+        {
+            categories.TotalCount,
+            categories.PageSize,
+            categories.CurrentPage,
+            categories.TotalPages,
+            categories.HasNext,
+            categories.HasPrevious
+        };
+
+        Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+        var categoriesDTO = categories.ToCategoryDtoList();
+
+        return Ok(categoriesDTO);
+    }
+
     [HttpGet]
     public ActionResult<IEnumerable<CategoryDTO>> Get()
     {

@@ -6,6 +6,8 @@ namespace ApiCatalogo.Repositories
     public interface IProductRepository : IRepository<Product>
     {
         IEnumerable<Product> GetProdructsByCategory(int id);
-        PagedList<Product> GetCategories(ProductsParameters productsParams);
+        PagedList<Product> GetProducts(ProductsParameters productsParams);
+        PagedList<Product> GetProductsFilterPrice(ProductsFilterPrice productsFilterPrice);
+
     }
 }
