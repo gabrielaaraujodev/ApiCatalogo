@@ -30,3 +30,8 @@ MySqlConnector.MySqlException (0x80004005): Unknown database 'apicatalogo'
    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
    at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+Information: 14 - Now listening on: https://localhost:7153
+Information: 14 - Now listening on: http://localhost:5275
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Development
+Information: 0 - Content root path: C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo
