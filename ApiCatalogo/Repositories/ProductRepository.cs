@@ -1,6 +1,7 @@
 ﻿using ApiCatalogo.Context;
 using ApiCatalogo.Models;
 using ApiCatalogo.Pagination;
+using X.PagedList;
 
 namespace ApiCatalogo.Repositories
 {
@@ -10,9 +11,11 @@ namespace ApiCatalogo.Repositories
         {
         }
 
-        public IEnumerable<Product> GetProdructsByCategory(int id)
+        public async Task<IEnumerable<Product>> GetProdructsByCategoryAsync(int id)
         {
-            return GetAll().Where(c => c.CategoryId == id);
+            var products = await GetAllAsync();
+            var categoriesProducts = products.Where(p => p.CategoryId == id);
+            return categoriesProducts;
         }
 
         //public IEnumerable<Product> GetProdructs(ProductsParameters productsParams)
@@ -23,17 +26,18 @@ namespace ApiCatalogo.Repositories
         //        .Take(productsParams.PageSize).ToList();
         //}
 
-        public PagedList<Product> GetProducts(ProductsParameters productsParams)
+        public async Task<IPagedList<Product>> GetProductsAsync(ProductsParameters productsParams)
         {
-            var products = GetAll().OrderBy(P => P.ProductId).AsQueryable();
-            var orderProducts = PagedList<Product>.ToPagedList(products, productsParams.PageNumber, productsParams.PageSize);
+            var products = await GetAllAsync();
+            var orderProducts = products.OrderBy(P => P.ProductId).AsQueryable();
+            var result = await orderProducts.ToPagedListAsync(productsParams.PageNumber, productsParams.PageSize);
 
-            return orderProducts;
+            return result;
         }
 
-        public PagedList<Product> GetProductsFilterPrice(ProductsFilterPrice productsFilterPrice)
+        public async Task<IPagedList<Product>> GetProductsFilterPriceAsync(ProductsFilterPrice productsFilterPrice)
         {
-            var products = GetAll().AsQueryable();
+            var products = await GetAllAsync();
 
             if (productsFilterPrice.Price.HasValue && !string.IsNullOrEmpty(productsFilterPrice.PriceStandart))
             {
@@ -50,7 +54,7 @@ namespace ApiCatalogo.Repositories
                 }
             }
 
-            var filterProducts = PagedList<Product>.ToPagedList(products, productsFilterPrice.PageNumber, productsFilterPrice.PageSize);
+            var filterProducts = await products.ToPagedListAsync(productsFilterPrice.PageNumber, productsFilterPrice.PageSize);
 
             return filterProducts;
         }

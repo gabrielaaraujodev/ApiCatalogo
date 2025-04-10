@@ -14,15 +14,15 @@ namespace ApiCatalogo.Repositories
             _context = context;
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
             /*Set<T>() possibilita acessar o conjunto da tabela correspodente
             no BD ao tipo <T>.*/
-            return _context.Set<T>().AsNoTracking().ToList();
+            return await _context.Set<T>().AsNoTracking().ToListAsync();
         }
-        public T? Get(Expression<Func<T, bool>> predicate)
+        public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate)
         {
-            return _context.Set<T>().FirstOrDefault(predicate);
+            return await _context.Set<T>().FirstOrDefaultAsync(predicate);
         }
         public T Create(T entity)
         {

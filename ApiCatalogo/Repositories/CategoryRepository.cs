@@ -1,6 +1,7 @@
 ﻿using ApiCatalogo.Context;
 using ApiCatalogo.Models;
 using ApiCatalogo.Pagination;
+using X.PagedList;
 
 namespace ApiCatalogo.Repositories;
 
@@ -9,22 +10,27 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
     public CategoryRepository(AppDbContext context) :base(context)
     {}
 
-    public PagedList<Category> GetCategories(CategoriesParameters categoriesParams)
+    public async Task<IPagedList<Category>> GetCategoriesAsync(CategoriesParameters categoriesParams)
     {
-        var categories = GetAll().OrderBy(c => c.CategoryId).AsQueryable();
-        var ordercategories = PagedList<Category>.ToPagedList(categories, categoriesParams.PageNumber, categoriesParams.PageSize);
+        var categories = await GetAllAsync();
+        var orderCategories = categories.OrderBy(c => c.CategoryId).AsQueryable();
+        //var result = PagedList<Category>.ToPagedList(orderCategories, categoriesParams.PageNumber, categoriesParams.PageSize);
+        var result = await orderCategories.ToPagedListAsync(categoriesParams.PageNumber, categoriesParams.PageSize);
 
-        return ordercategories;
+        return result;
     }
 
-    public PagedList<Category> GetCategoriesFilterName(CategoriesFilterName categoriesParams)
+    public async Task<IPagedList<Category>> GetCategoriesFilterNameAsync(CategoriesFilterName categoriesParams)
     {
-        var categories = GetAll().AsQueryable();
+        var categories = await GetAllAsync();
 
         if(!string.IsNullOrEmpty(categoriesParams.Name))
             categories = categories.Where(c => c.Name.Contains(categoriesParams.Name));
 
-        var categoriesFilter = PagedList<Category>.ToPagedList(categories, categoriesParams.PageSize, categoriesParams.PageNumber);
+        //var categoriesFilter = PagedList<Category>.ToPagedList(categories.AsQueryable(), categoriesParams.PageSize, categoriesParams.PageNumber);
+
+        // Com pacote externo:
+        var categoriesFilter = await categories.ToPagedListAsync(categoriesParams.PageNumber, categoriesParams.PageSize);
 
         return categoriesFilter;
     }
