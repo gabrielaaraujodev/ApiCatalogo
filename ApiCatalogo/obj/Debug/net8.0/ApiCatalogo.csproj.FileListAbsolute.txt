@@ -217,7 +217,6 @@ C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.ApiCatalogo.props
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.ApiCatalogo.props
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\staticwebassets.pack.json
-C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\ApiCatal.B2456931.Up2Date
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\ApiCatalogo.dll
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\refint\ApiCatalogo.dll
@@ -230,3 +229,15 @@ C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\bin\Debug\net
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\bin\Debug\net8.0\Newtonsoft.Json.dll
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\JetBrains.Annotations.dll
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\X.PagedList.dll
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\X.PagedList.Mvc.Core.dll
