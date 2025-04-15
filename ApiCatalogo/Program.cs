@@ -5,6 +5,7 @@ using ApiCatalogo.Filter;
 using ApiCatalogo.Logging;
 using ApiCatalogo.Models;
 using ApiCatalogo.Repositories;
+using ApiCatalogo.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -76,6 +77,7 @@ builder.Services.AddScoped<ApiLoggingFilter>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 /*
     AddScope não permite que seja registrado tipos genéricos. 
