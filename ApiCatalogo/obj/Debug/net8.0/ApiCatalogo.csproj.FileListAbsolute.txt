@@ -206,7 +206,6 @@ C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\ApiCatalogo.csproj.CoreCompileInputs.cache
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\ApiCatalogo.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\ApiCatalogo.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\ApiCatalogo.sourcelink.json
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\scopedcss\bundle\ApiCatalogo.styles.css
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\staticwebassets.development.json
