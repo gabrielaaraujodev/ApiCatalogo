@@ -23,7 +23,6 @@ namespace ApiCatalogo.Services
                 Audience = _config.GetSection("JWT").GetValue<string>("ValidAudience"),
                 Issuer = _config.GetSection("JWT").GetValue<string>("ValidIssuier"),
                 SigningCredentials = signingCredentials
-                
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

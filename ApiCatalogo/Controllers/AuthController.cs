@@ -3,6 +3,7 @@ using System.Security.Claims;
 using ApiCatalogo.DTOs.Token;
 using ApiCatalogo.Models;
 using ApiCatalogo.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +18,16 @@ namespace ApiCatalogo.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthController> _logger;
 
         public AuthController(ITokenService tokenService, UserManager<ApplicationUser> userManager, 
-           RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+           RoleManager<IdentityRole> roleManager, IConfiguration configuration, ILogger<AuthController> logger)
         {
             _tokenService = tokenService;
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _logger = logger;
         }
 
 
@@ -42,6 +45,7 @@ namespace ApiCatalogo.Controllers
                 {
                     new Claim (ClaimTypes.Name, user.UserName!),
                     new Claim (ClaimTypes.Email, user.Email!),
+                    new Claim ("id", user.UserName!),
                     new Claim (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())  
                 };
 
@@ -101,6 +105,113 @@ namespace ApiCatalogo.Controllers
             }
 
             return Ok();
+        }
+
+        [HttpPost]
+        [Route("refresh-token")]
+        public async Task<IActionResult> RefreshToken (TokenModelDTO tokenModel)
+        {
+            if (tokenModel is null)
+                return BadRequest("Invalid client request");
+
+            string? accessToken = tokenModel.AccessToken ?? throw new ArgumentNullException(nameof(tokenModel));
+
+            string? refreshToken = tokenModel.RefreshToken ?? throw new ArgumentNullException(nameof(tokenModel));
+
+            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken!, _configuration);
+
+            if (principal == null)
+                return BadRequest("Invalid access token/resfresh token");
+
+            string userName = principal.Identity.Name;
+
+            var user = await _userManager.FindByNameAsync(userName!);
+
+            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                return BadRequest("Invalid access token/refresh token");
+            }
+
+            var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims.ToList(), _configuration);
+
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+            await _userManager.UpdateAsync(user);
+
+            return new ObjectResult(
+                new
+                {
+                    accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+                    refreshToken = newRefreshToken
+                });
+        }
+
+        [HttpPost]
+        [Route("revoke/{username}")]
+        [Authorize(Policy = "ExclusiveOnly")]
+
+        public async Task<IActionResult> Revoke(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+
+            if (user == null) return BadRequest("Invalid user name");
+
+            user.RefreshToken = null;
+
+            await _userManager.UpdateAsync(user);
+
+            return NoContent();
+        }
+
+        [HttpPost]
+        [Route("CreateRole")]
+        [Authorize(Policy = "SuperAdminOnly")]
+        public async Task<IActionResult> CreateRole(string roleName)
+        {
+            var roleExist = await _roleManager.RoleExistsAsync(roleName);
+
+            if(!roleExist)
+            {
+                var roleResult = await _roleManager.CreateAsync(new IdentityRole(roleName));
+
+                if(roleResult.Succeeded)
+                {
+                    _logger.LogInformation(1, "Roles Added");
+                    return StatusCode(StatusCodes.Status200OK);
+                }
+                else
+                {
+                    _logger.LogInformation(2, "Error");
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
+            }
+            return StatusCode(StatusCodes.Status400BadRequest);
+        }
+
+        [HttpPost]
+        [Route("AddUserToRole")]
+        [Authorize(Policy = "SuperAdminOnly")]
+        public async Task<IActionResult> AddUserToRole(string email, string roleName)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user != null)
+            {
+                var result = await _userManager.AddToRoleAsync(user, roleName);
+
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation(1, $"User {user.Email} added to the {roleName} role");
+                    return StatusCode(StatusCodes.Status200OK);
+                }
+                else
+                {
+                    _logger.LogInformation(1, $"Unable to add user {user.Email} to the {roleName} role");
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
+            }
+            return BadRequest(new { error = "Unable to find user" });
         }
     }
 }
