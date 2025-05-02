@@ -9,6 +9,7 @@ using ApiCatalogo.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -25,6 +26,37 @@ builder.Services.AddControllers(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 }).AddNewtonsoftJson();
+
+// Implementação do CORS (Padrãp)
+// var OrigensComAcessoPermitido = "_origensComAcessoPermitido";
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.WithOrigins("http://www.apirequest.io")
+                        .WithMethods("GET", "POST")
+                        .AllowAnyHeader();
+                    });
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PoliticaCors1",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://www.apirequest.io")
+                        .WithMethods("GET");
+                    });
+
+    options.AddPolicy("PoliticaCors2",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://www.gabrielaraujo.net")
+                        .WithMethods("GET", "DELETE");
+                    });
+});
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -109,6 +141,17 @@ builder.Services.AddAuthorization(options =>
                                                                                    context.User.IsInRole("SuperAdmin")));
 });
 
+// Rate Limiting
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter(policyName: "fixedWindow", options =>
+    {
+        options.PermitLimit = 1;
+        options.Window = TimeSpan.FromSeconds(5);
+        options.QueueLimit = 0;
+    });
+});
+
 builder.Services.AddScoped<ApiLoggingFilter>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -137,7 +180,14 @@ if (app.Environment.IsDevelopment())
     app.ConfigureExceptionHandler();
 }
 
+
 app.UseHttpsRedirection();
+
+// Implementação do CORS
+app.UseCors();
+
+// Implementação o RateLimiter
+app.UseRateLimiter();
 
 app.UseAuthorization();
 

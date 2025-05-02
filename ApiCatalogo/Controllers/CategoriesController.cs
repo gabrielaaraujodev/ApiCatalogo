@@ -1,15 +1,18 @@
 ﻿using ApiCatalogo.DTOs;
 using ApiCatalogo.DTOs.ManualMapping;
-using ApiCatalogo.Models;
 using ApiCatalogo.Pagination;
 using ApiCatalogo.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace ApiCatalogo.Controllers;
+
+[EnableCors("PoliticaCORS1")]
 [Route("[controller]")]
 [ApiController]
+// [EnableRateLimiting("fixedWindow")]
 public class CategoriesController : ControllerBase
 {
     private IUnitOfWork _uof;
@@ -78,6 +81,7 @@ public class CategoriesController : ControllerBase
         return Ok(categoriesDTO);
     }
 
+    [EnableCors("PoliticaCORS1")]
     [HttpGet("{id:int}", Name ="ObterCategoria")]
     public async Task<ActionResult<CategoryDTO>> Get(int id)
     {    
@@ -138,6 +142,7 @@ public class CategoriesController : ControllerBase
         return Ok(categoryMapperDTO); 
     }
 
+    [EnableCors("PoliticaCORS2")]
     [HttpDelete("{id:int}")]
     [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult<CategoryDTO>> Delete(int id)
