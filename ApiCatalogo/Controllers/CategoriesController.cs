@@ -68,6 +68,11 @@ public class CategoriesController : ControllerBase
         return Ok(categoriesDTO);
     }
 
+    /// <summary>
+    /// Obtem uma lista de objetos Categoria
+    /// </summary>
+    /// <returns>Uma lista de objetos Categoria</returns>
+
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CategoryDTO>>> Get()
     {
@@ -80,6 +85,12 @@ public class CategoriesController : ControllerBase
 
         return Ok(categoriesDTO);
     }
+
+    /// <summary>
+    /// Obtem uma Categoria pelo seu Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>Objetos Categoria</returns>
 
     [EnableCors("PoliticaCORS1")]
     [HttpGet("{id:int}", Name ="ObterCategoria")]
@@ -104,6 +115,22 @@ public class CategoriesController : ControllerBase
         return await _context.Categories.AsNoTracking().Include(p => p.Products).ToListAsync();
     }*/
 
+    /// <summary>
+    /// Inclui uma nova Categoria
+    /// </summary>
+    /// <remarks>
+    /// Exemplo de request:
+    ///
+    ///     POST api/categories
+    ///     {
+    ///         "categodyId": 1,
+    ///         "nome": "category1",
+    ///         "imageURL": "http://teste.net/1.jpg
+    ///     }
+    /// </remarks>
+    /// <param name="categoryDTO">objeto Categoria</param>
+    /// <returns>O objeto Categoria incluida</returns>
+    /// <remarks>Retorna um objeto Categoria incluído</remarks>
     [HttpPost]
     public async Task<ActionResult<CategoryDTO>> Post(CategoryDTO categoryDTO)
     { 

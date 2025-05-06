@@ -1,7 +1,18 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "apicatalogo",
+    "title": "APIcatalogo",
+    "description": "Catálogo de produtos e categorias.",
+    "termsOfService": "https://apideaprendizado.net/terms",
+    "contact": {
+      "name": "Gabriel",
+      "url": "https://apideaprendizado.net/terms",
+      "email": "aprendizado@gmail.com"
+    },
+    "license": {
+      "name": "Usar sobre LICX",
+      "url": "https://apideaprendizado.net/terms"
+    },
     "version": "v1"
   },
   "paths": {
@@ -10,7 +21,10 @@
         "tags": [
           "Auth"
         ],
+        "summary": "Verifica as credenciais do usuário.",
+        "description": "Retorna o Status 200 e o token",
         "requestBody": {
+          "description": "Um objeto do tipo UsuárioDTO",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -46,7 +60,10 @@
         "tags": [
           "Auth"
         ],
+        "summary": "Registra um novo usuário",
+        "description": "Retorna o Status 200",
         "requestBody": {
+          "description": "Um objeto UsuarioDTO",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -308,6 +325,7 @@
         "tags": [
           "Categories"
         ],
+        "summary": "Obtem uma lista de objetos Categoria",
         "responses": {
           "200": {
             "description": "OK",
@@ -344,7 +362,10 @@
         "tags": [
           "Categories"
         ],
+        "summary": "Inclui uma nova Categoria",
+        "description": "Exemplo de request:\r\n            \r\n    POST api/categories\r\n    {\r\n        \"categodyId\": 1,\r\n        \"nome\": \"category1\",\r\n        \"imageURL\": \"http://teste.net/1.jpg\r\n    }",
         "requestBody": {
+          "description": "objeto Categoria",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -397,11 +418,13 @@
         "tags": [
           "Categories"
         ],
+        "summary": "Obtem uma Categoria pelo seu Id",
         "operationId": "ObterCategoria",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "integer",
@@ -665,6 +688,7 @@
         "tags": [
           "Products"
         ],
+        "summary": "Exibe uma relação de produtos",
         "responses": {
           "200": {
             "description": "OK",
@@ -754,11 +778,13 @@
         "tags": [
           "Products"
         ],
+        "summary": "Obtem Produto pelo seu identificador",
         "operationId": "ObterProduto",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Código do produto",
             "required": true,
             "schema": {
               "type": "integer",

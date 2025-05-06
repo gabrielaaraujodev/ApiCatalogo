@@ -241,3 +241,5 @@ C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\X.PagedList.dll
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\apicatalogo\bin\Debug\net8.0\X.PagedList.Mvc.Core.dll
 C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\bin\Debug\net8.0\ApiCatalogo.xml
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogo\obj\Debug\net8.0\ApiCatalogo.xml

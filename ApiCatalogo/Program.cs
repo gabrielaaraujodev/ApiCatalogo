@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -62,7 +63,27 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "apicatalogo", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo {
+        Version = "v1",
+        Title = "APIcatalogo", 
+        Description = "Catálogo de produtos e categorias.",
+        TermsOfService = new Uri("https://apideaprendizado.net/terms"),
+        Contact = new OpenApiContact
+        {
+            Name = "Gabriel",
+            Email= "aprendizado@gmail.com",
+            Url = new Uri("https://apideaprendizado.net/terms")
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Usar sobre LICX",
+            Url = new Uri("https://apideaprendizado.net/terms")
+        }
+    });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
