@@ -37,6 +37,12 @@ public class ProductsController : ControllerBase
         _mapper = mapper;
     }
 
+    public ProductsController(IUnitOfWork uof, IMapper mapper)
+    {
+        _uof = uof;
+        _mapper = mapper;
+    }
+
     [HttpGet("pagination")]
     public async Task<ActionResult<IEnumerable<ProductDTO>>> Get([FromQuery] ProductsParameters productsParameters)
     {
@@ -89,18 +95,24 @@ public class ProductsController : ControllerBase
     [Authorize(Policy = "UserOnly")]
     public async Task<ActionResult<IEnumerable<ProductDTO>>> Get()
     {
-        var products = await _uof.ProductRepository.GetAllAsync();
-
-        if (products is null)
+        try
         {
-            _logger.LogWarning("Lista de produtos inexistentes.");
-            return NotFound("Lista de produtos inexistente.");
+            var products = await _uof.ProductRepository.GetAllAsync();
+
+            if (products is null)
+            {
+                _logger.LogWarning("Lista de produtos inexistentes.");
+                return NotFound("Lista de produtos inexistente.");
+            }
+
+            var productsDTO = _mapper.Map<IEnumerable<ProductDTO>>(products);
+
+
+            return Ok(products);
+        } catch (Exception ex)
+        {
+            return BadRequest(ex);
         }
-
-        var productsDTO = _mapper.Map<IEnumerable<ProductDTO>>(products);
-
-
-        return Ok(products);
     }
 
     /// <summary>

@@ -1,0 +1,7 @@
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogoxUnitTests\bin\Debug\net8.0\CoverletSourceRootsMapping_ApiCatalogoxUnitTests
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogoxUnitTests\obj\Debug\net8.0\ApiCatalogoxUnitTests.csproj.AssemblyReference.cache
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogoxUnitTests\obj\Debug\net8.0\ApiCatalogoxUnitTests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogoxUnitTests\obj\Debug\net8.0\ApiCatalogoxUnitTests.AssemblyInfoInputs.cache
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogoxUnitTests\obj\Debug\net8.0\ApiCatalogoxUnitTests.AssemblyInfo.cs
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogoxUnitTests\obj\Debug\net8.0\ApiCatalogoxUnitTests.csproj.CoreCompileInputs.cache
+C:\Users\Gabriel Araujo (Dev)\Source\Repos\ApiCatalogo\ApiCatalogoxUnitTests\obj\Debug\net8.0\ApiCatalogoxUnitTests.sourcelink.json
