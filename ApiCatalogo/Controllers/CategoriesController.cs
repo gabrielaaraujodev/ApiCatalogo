@@ -165,6 +165,20 @@ public class CategoriesController : ControllerBase
         var categoryDtoToNormal = categoryDTO.ToCategory();
 
         var createdCategory = _uof.CategoryRepository.Create(categoryDtoToNormal);
+
+        _cache.Remove(CacheCategorieskey);
+
+        var cacheKey = $"CacheCategory_{createdCategory.CategoryId}";
+
+        var cacheOptions = new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30),
+            SlidingExpiration = TimeSpan.FromSeconds(15),
+            Priority = CacheItemPriority.High
+        };
+
+        _cache.Set(cacheKey, createdCategory,cacheOptions);
+
         await _uof.CommitAsync();
 
         var categoryMapperDTO = createdCategory.ToCategoryDTO();
