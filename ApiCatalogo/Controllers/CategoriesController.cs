@@ -229,6 +229,8 @@ public class CategoriesController : ControllerBase
         }
 
         var deletedCategory = _uof.CategoryRepository.Delete(category);
+        _cache.Remove($"CacheCategory_{id}");
+        _cache.Remove(CacheCategorieskey);
         await _uof.CommitAsync();
 
         var categoryMapperDTO = deletedCategory.ToCategoryDTO();
