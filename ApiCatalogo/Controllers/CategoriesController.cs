@@ -1,10 +1,12 @@
 ﻿using ApiCatalogo.DTOs;
 using ApiCatalogo.DTOs.ManualMapping;
+using ApiCatalogo.Models;
 using ApiCatalogo.Pagination;
 using ApiCatalogo.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 
 namespace ApiCatalogo.Controllers;
@@ -17,11 +19,14 @@ public class CategoriesController : ControllerBase
 {
     private IUnitOfWork _uof;
     private readonly ILogger<CategoriesController> _logger;
+    private readonly IMemoryCache _cache;
+    private const string CacheCategorieskey = "CacheCategories";
 
-    public CategoriesController(ILogger<CategoriesController> logger, IUnitOfWork uof)
+    public CategoriesController(ILogger<CategoriesController> logger, IUnitOfWork uof, IMemoryCache cache)
     {
         _logger = logger;
         _uof = uof;
+        _cache = cache;
     }
 
     [HttpGet("pagination")]
@@ -76,12 +81,29 @@ public class CategoriesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CategoryDTO>>> Get()
     {
-        var categories = await _uof.CategoryRepository.GetAllAsync();
+        if(!_cache.TryGetValue(CacheCategorieskey, out IEnumerable<Category>? categories))
+        {
+            categories = await _uof.CategoryRepository.GetAllAsync();
 
-        if (categories is null) 
-            return NotFound("Não existem categorias ...");
+            if (categories is not null && categories.Any())
+            {
+                var cacheOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30),
+                    SlidingExpiration = TimeSpan.FromSeconds(30),
+                    Priority = CacheItemPriority.High
+                };
+            } else
+            {
+                return NotFound("Não existem categorias ...");
+            }
 
-        var categoriesDTO =  categories.ToCategoryDtoList();
+            var categoriesDtoCache = categories.ToCategoryDtoList();
+
+            return Ok(categoriesDtoCache);
+        }
+
+        var categoriesDTO = categories.ToCategoryDtoList();
 
         return Ok(categoriesDTO);
     }
